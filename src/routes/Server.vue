@@ -29,12 +29,28 @@ const { data } = useSWRV<ModelServerGroupResponseItem[]>(
   swrFetcher,
 );
 const groupedServers = computed(() => {
-  if (!data.value) return [{ data: servers.value, group: "Ungrouped" }];
+  if (!data.value) return [{ data: servers.value, group: "Default" }];
 
-  return data.value.map((group) => ({
-    group: group.group.name,
-    data: servers.value.filter((s) => group.servers.includes(s.id)),
-  }));
+  const grouped = data.value
+    .map((group) => ({
+      group: group.group.name,
+      data: servers.value.filter((s) => (group.servers || []).includes(s.id)),
+    }))
+    .filter((group) => group.data.length > 0);
+
+  const groupedServerIds = new Set(
+    data.value.flatMap((group) => group.servers),
+  );
+
+  const ungroupedServers = servers.value.filter(
+    (server) => !groupedServerIds.has(server.id),
+  );
+
+  if (ungroupedServers.length > 0) {
+    grouped.push({ data: ungroupedServers, group: "Ungrouped" });
+  }
+
+  return grouped;
 });
 
 const ws = new WebSocket("/api/v1/ws/server");
