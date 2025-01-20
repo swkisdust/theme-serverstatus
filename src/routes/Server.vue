@@ -1,7 +1,11 @@
 <template>
-  <div class="flex mt-6 mx-6 items-center mb-2 justify-center">
+  <div
+    v-for="gs in groupedServers"
+    class="flex mt-6 mx-6 items-center mb-2 justify-center"
+  >
     <ServerTable
-      :data="servers"
+      :data="gs.data"
+      :group="gs.group"
       class="p-[20px] border-[1px] rounded-[3px] w-full"
     >
     </ServerTable>
@@ -9,11 +13,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type Ref } from "vue";
+import { computed, ref, type Ref } from "vue";
+import useSWRV from "swrv";
+import { swrFetcher } from "@/lib/fetch";
 import ServerTable from "@/components/ServerTable.vue";
-import type { StreamServer, StreamServerData } from "@/components/types";
+import type {
+  StreamServer,
+  StreamServerData,
+  ModelServerGroupResponseItem,
+} from "@/components/types";
 
 const servers: Ref<StreamServer[]> = ref([]);
+const { data } = useSWRV<ModelServerGroupResponseItem[]>(
+  "/api/v1/server-group",
+  swrFetcher,
+);
+const groupedServers = computed(() => {
+  if (!data.value) return [{ data: servers.value, group: "Ungrouped" }];
+
+  return data.value.map((group) => ({
+    group: group.group.name,
+    data: servers.value.filter((s) => group.servers.includes(s.id)),
+  }));
+});
 
 const ws = new WebSocket("/api/v1/ws/server");
 ws.onopen = () => {

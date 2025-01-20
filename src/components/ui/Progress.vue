@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="ui progress success">
+    <div :class="`ui progress ${pState}`">
       <div class="bar" :style="{ width: progress + '%' }">
         <div class="progress">
           <div>
@@ -13,7 +13,20 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ progress?: string }>();
+import { computed } from "vue";
+
+const props = defineProps<{ progress?: string; online?: boolean }>();
+const pState = computed(() => {
+  if (!props.online) return "offline";
+
+  const p = Number(props.progress);
+  if (p >= 85 && p <= 90) {
+    return "warning";
+  } else if (p > 90) {
+    return "error";
+  }
+  return "success";
+});
 </script>
 
 <style scoped>
@@ -82,5 +95,35 @@ defineProps<{ progress?: string }>();
 .ui.progress.success .bar::after {
   -webkit-animation: none !important;
   animation: none !important;
+}
+
+.ui.progress.warning .bar {
+  background-image: linear-gradient(
+    rgb(240, 173, 78) 0,
+    rgb(236, 151, 31) 100%
+  );
+}
+
+.ui.progress.warning .bar,
+.ui.progress.warning .bar::after {
+  -webkit-animation: none !important;
+  animation: none !important;
+}
+
+.ui.progress.error .bar {
+  background-image: linear-gradient(rgb(217, 83, 79) 0, rgb(201, 48, 44) 100%);
+}
+
+.ui.progress.error .bar,
+.ui.progress.error .bar::after {
+  -webkit-animation: none !important;
+  animation: none !important;
+}
+
+.ui.progress.offline .bar {
+  background-image: linear-gradient(
+    rgb(128, 128, 128) 0,
+    rgb(128, 128, 128) 100%
+  );
 }
 </style>

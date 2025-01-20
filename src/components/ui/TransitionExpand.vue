@@ -9,85 +9,96 @@
   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   -->
 <script setup lang="ts">
-import { computed, Transition, TransitionGroup } from 'vue'
+import { computed, Transition, TransitionGroup } from "vue";
 
 export interface TransitionExpandProps {
-  tag?: keyof HTMLElementTagNameMap
-  direction?: 'vertical' | 'horizontal'
-  duration?: number
+  tag?: keyof HTMLElementTagNameMap;
+  direction?: "vertical" | "horizontal";
+  duration?: number;
 }
 
 const props = withDefaults(defineProps<TransitionExpandProps>(), {
-  direction: 'vertical',
-  duration: 300
-})
+  direction: "vertical",
+  duration: 300,
+});
 
-const component = computed(() => (props.tag ? TransitionGroup : Transition))
-const property = computed(() => (props.direction === 'vertical' ? 'height' : 'width'))
-const inverseProperty = computed(() => (props.direction !== 'vertical' ? 'height' : 'width'))
-const durationInMs = computed(() => `${props.duration}ms`)
+const component = computed(() => (props.tag ? TransitionGroup : Transition));
+const property = computed(() =>
+  props.direction === "vertical" ? "height" : "width",
+);
+const inverseProperty = computed(() =>
+  props.direction !== "vertical" ? "height" : "width",
+);
+const durationInMs = computed(() => `${props.duration}ms`);
 
 const transitionProps = computed(() => ({
   name: `expand--${props.direction}`,
-  ...(props.tag && { tag: props.tag })
-}))
+  ...(props.tag && { tag: props.tag }),
+}));
 
 const enter = (element: HTMLElement) => {
-  element.style.transition = 'none'
+  element.style.transition = "none";
 
-  element.style[inverseProperty.value] = getComputedStyle(element)[inverseProperty.value]
-  element.style.position = 'absolute'
-  element.style.visibility = 'hidden'
+  element.style[inverseProperty.value] =
+    getComputedStyle(element)[inverseProperty.value];
+  element.style.position = "absolute";
+  element.style.visibility = "hidden";
 
-  element.classList.remove(`expand--${props.direction}-enter-from`)
+  element.classList.remove(`expand--${props.direction}-enter-from`);
 
-  const style = (({ width, height }) => ({ width, height }))(getComputedStyle(element))
+  const style = (({ width, height }) => ({ width, height }))(
+    getComputedStyle(element),
+  );
 
-  element.classList.add(`expand--${props.direction}-enter-from`)
+  element.classList.add(`expand--${props.direction}-enter-from`);
 
-  element.style[inverseProperty.value] = ''
-  element.style['position'] = ''
-  element.style['visibility'] = ''
+  element.style[inverseProperty.value] = "";
+  element.style["position"] = "";
+  element.style["visibility"] = "";
 
-  getComputedStyle(element)[property.value]
+  getComputedStyle(element)[property.value];
 
-  element.style['transition'] = ''
+  element.style["transition"] = "";
 
   requestAnimationFrame(() => {
-    element.style[property.value] = style[property.value]
-  })
-}
+    element.style[property.value] = style[property.value];
+  });
+};
 
 const leave = (element: HTMLElement) => {
-  const style = getComputedStyle(element)
+  const style = getComputedStyle(element);
 
-  element.style[property.value] = style[property.value]
+  element.style[property.value] = style[property.value];
 
-  getComputedStyle(element)[property.value]
+  getComputedStyle(element)[property.value];
 
   requestAnimationFrame(() => {
-    element.style[property.value] = '0'
-  })
-}
+    element.style[property.value] = "0";
+  });
+};
 
 const after = (element: HTMLElement) => {
-  element.style[property.value] = ''
-}
+  element.style[property.value] = "";
+};
 </script>
 
 <template>
-  <Component :is="component" v-bind="transitionProps" @enter="enter" @after-enter="after" @leave="leave"
-    @after-leave="after">
+  <Component
+    :is="component"
+    v-bind="transitionProps"
+    @enter="enter"
+    @after-enter="after"
+    @leave="leave"
+    @after-leave="after"
+  >
     <slot></slot>
   </Component>
 </template>
 
 <style lang="scss">
 .expand {
-
   &--vertical,
   &--horizontal {
-
     &-enter-active,
     &-leave-active {
       transition-duration: v-bind(durationInMs);
@@ -97,7 +108,6 @@ const after = (element: HTMLElement) => {
   }
 
   &--vertical {
-
     &-enter-active,
     &-leave-active {
       transition-property: height, padding, margin;
@@ -114,7 +124,6 @@ const after = (element: HTMLElement) => {
   }
 
   &--horizontal {
-
     &-enter-active,
     &-leave-active {
       transition-property: width, padding, margin;

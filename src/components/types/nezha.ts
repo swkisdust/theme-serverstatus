@@ -53,3 +53,15 @@ export interface SensorTemperature {
   Name: string;
   Temperature: number;
 }
+
+export interface ModelServerGroupResponseItem {
+  group: ModelServerGroup;
+  servers: number[];
+}
+
+export interface ModelServerGroup {
+  created_at: string;
+  id: number;
+  name: string;
+  updated_at: string;
+}

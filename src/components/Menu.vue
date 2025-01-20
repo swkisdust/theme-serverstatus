@@ -9,33 +9,33 @@
           to="/"
           class="flex gap-2 items-center ml-2 mr-6 p-2 text-xl"
         >
-          <img :src="nezhaLogo" class="h-7" />
+          <img src="/logo.svg" class="h-7" />
           Nezha
         </RouterLink>
       </div>
       <NavigationMenuList class="space-x-6 justify-start text-base">
         <NavigationMenuItem>
           <RouterLink to="/" class="flex">
-            <Icon icon="home"></Icon>
+            <i class="home icon"></i>
             首页
           </RouterLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <RouterLink to="/service" class="flex">
-            <Icon icon="rss"></Icon>
+            <i class="rss icon"></i>
             服务
           </RouterLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <RouterLink to="/network" class="flex items-center gap-2">
-            <i><img :src="hddNetwork" class="h-4" /></i>
+          <RouterLink to="/network" class="flex">
+            <i class="bi bi-hdd-network icon"></i>
             网络
           </RouterLink>
         </NavigationMenuItem>
       </NavigationMenuList>
       <div class="flex ml-auto mr-4">
         <a href="/dashboard" rel="noopener noreferrer" class="flex">
-          <Icon icon="user"></Icon>
+          <i class="user icon"></i>
           管理后台
         </a>
       </div>
@@ -52,9 +52,6 @@ import {
   NavigationMenuList,
   NavigationMenuItem,
 } from "@/components/ui/navigation-menu";
-import nezhaLogo from "@/assets/logo.svg";
-import hddNetwork from "@/assets/hdd-network.svg";
-import Icon from "@/components/ui/Icon.vue";
 
 const isDesktop = useMediaQuery("(min-width: 890px)");
 </script>
