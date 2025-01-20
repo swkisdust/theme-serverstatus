@@ -20,7 +20,7 @@ const pState = computed(() => {
   if (!props.online) return "offline";
 
   const p = Number(props.progress);
-  if (p >= 85 && p <= 90) {
+  if (p >= 80 && p <= 90) {
     return "warning";
   } else if (p > 90) {
     return "error";
