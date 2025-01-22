@@ -12,6 +12,9 @@ const router = createRouter({
     {
       path: "/",
       component: Server,
+      meta: {
+        keepAlive: true,
+      },
     },
     {
       path: "/service",

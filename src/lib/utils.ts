@@ -33,14 +33,14 @@ export const nezhaUtils = {
   getTemperature: (temperatureList: SensorTemperature[]) => {
     // 将 sensorList 中的所有项转换为小写
     const lowerCaseSensorList = sensorList.map((sensor) =>
-      sensor.toLowerCase()
+      sensor.toLowerCase(),
     );
 
     // 合并过滤逻辑：过滤出 Temperature 不为 0 且 Name 在 sensorList 中的元素（忽略大小写）
     const filtered = temperatureList.filter(
       (item) =>
         item.Temperature !== 0 &&
-        lowerCaseSensorList.includes(item.Name.toLowerCase())
+        lowerCaseSensorList.includes(item.Name.toLowerCase()),
     );
 
     // 如果有匹配的元素，则计算这些元素的 Temperature 的最大值
@@ -52,7 +52,7 @@ export const nezhaUtils = {
 
     // 如果没有匹配的元素，则计算 temperatureList 中所有 Temperature 不为 0 的元素的最大值
     const nonZeroTemps = temperatureList.filter(
-      (item) => item.Temperature !== 0
+      (item) => item.Temperature !== 0,
     );
 
     if (nonZeroTemps.length > 0) {

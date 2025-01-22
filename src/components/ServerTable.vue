@@ -3,11 +3,23 @@
     <h1 class="text-xl font-bold mb-2 overflow-hidden">{{ group }}</h1>
     <table class="w-full caption-bottom leading-[20px] text-[14px]">
       <thead>
-        <tr v-for="headerGroups in table.getHeaderGroups()" :key="headerGroups.id" class="border-t">
-          <th v-for="header in headerGroups.headers" :key="header.id" :colspan="header.colSpan"
-            class="relative text-center align-middle p-[5px] font-semibold" :style="{ width: `${header.getSize()}px` }">
-            <FlexRender v-if="!header.isPlaceholder" :render="header.column.columnDef.header"
-              :props="header.getContext()" />
+        <tr
+          v-for="headerGroups in table.getHeaderGroups()"
+          :key="headerGroups.id"
+          class="border-t"
+        >
+          <th
+            v-for="header in headerGroups.headers"
+            :key="header.id"
+            :colspan="header.colSpan"
+            class="relative text-center align-middle p-[5px] font-semibold"
+            :style="{ width: `${header.getSize()}px` }"
+          >
+            <FlexRender
+              v-if="!header.isPlaceholder"
+              :render="header.column.columnDef.header"
+              :props="header.getContext()"
+            />
           </th>
         </tr>
       </thead>
@@ -15,12 +27,22 @@
         <template v-for="row in table.getRowModel().rows" :key="row.id">
           <tr
             :class="`border-t cursor-pointer ${row.index % 2 === 0 ? `bg-[#ffffff]` : `bg-[#f9f9f9]`} hover:bg-[#e6e6e6]`"
-            @click="() => row.toggleExpanded()">
-            <td v-for="cell in row.getVisibleCells()" :key="cell.id" class="text-center align-middle p-[5px]">
-              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+            @click="() => row.toggleExpanded()"
+          >
+            <td
+              v-for="cell in row.getVisibleCells()"
+              :key="cell.id"
+              class="text-center align-middle p-[5px]"
+            >
+              <FlexRender
+                :render="cell.column.columnDef.cell"
+                :props="cell.getContext()"
+              />
             </td>
           </tr>
-          <tr :class="`${row.index % 2 === 0 ? `bg-[#ffffff]` : `bg-[#f9f9f9]`}`">
+          <tr
+            :class="`${row.index % 2 === 0 ? `bg-[#ffffff]` : `bg-[#f9f9f9]`}`"
+          >
             <td :colspan="table.getAllColumns().length" class="p-0">
               <TransitionExpand :duration="150">
                 <div v-show="row.getIsExpanded()" class="my-[10px] ml-[18px]">
@@ -28,7 +50,9 @@
                     <span>系统:</span>
                     <span v-if="row.original.host?.platform">
                       <span>{{ row.original.host.platform }}</span>
-                      <span v-if="row.original.host?.platform_version">-{{ row.original.host.platform_version }}</span>
+                      <span v-if="row.original.host?.platform_version"
+                        >-{{ row.original.host.platform_version }}</span
+                      >
                     </span>
                     <span v-if="row.original.host?.arch">
                       [{{
@@ -43,18 +67,20 @@
                     <template v-if="row.original.host?.cpu">
                       <span>{{
                         (row.original.host?.cpu || []).join(",")
-                        }}</span>
+                      }}</span>
                       <span>{{
                         `(${(row.original.state?.cpu || 0).toFixed(2)}%)`
-                        }}</span>
+                      }}</span>
                     </template>
                   </div>
                   <div v-if="row.original.host?.gpu" class="flex gap-1">
                     <span>GPU:</span>
-                    <template v-if="
-                      row.original.state?.gpu &&
-                      row.original.state.gpu.length > 1
-                    ">
+                    <template
+                      v-if="
+                        row.original.state?.gpu &&
+                        row.original.state.gpu.length > 1
+                      "
+                    >
                       <template v-for="(model, index) in row.original.host.gpu">
                         <span>{{ model }}</span>
                         <span>({{ row.original.state.gpu[index] }}%)</span>
@@ -69,21 +95,21 @@
                     <span>硬盘:</span>
                     <span>{{
                       nezhaUtils.formatBytes(row.original.state?.disk_used || 0)
-                      }}</span>
+                    }}</span>
                     <span>/</span>
                     <span>{{
                       nezhaUtils.formatBytes(row.original.host?.disk_total || 0)
-                      }}</span>
+                    }}</span>
                   </div>
                   <div class="flex gap-1">
                     <span>内存:</span>
                     <span>{{
                       nezhaUtils.formatBytes(row.original.state?.mem_used || 0)
-                      }}</span>
+                    }}</span>
                     <span>/</span>
                     <span>{{
                       nezhaUtils.formatBytes(row.original.host?.mem_total || 0)
-                      }}</span>
+                    }}</span>
                   </div>
                   <div class="flex gap-1">
                     <span>交换:</span>
@@ -112,33 +138,37 @@
                   </div>
                   <div class="flex gap-1">
                     <span>流量:</span>
-                    <span>IN
+                    <span
+                      >IN
                       {{
                         nezhaUtils.formatBytes(
                           row.original.state?.net_in_transfer || 0,
                         )
-                      }}</span>
+                      }}</span
+                    >
                     <span>/</span>
-                    <span>OUT
+                    <span
+                      >OUT
                       {{
                         nezhaUtils.formatBytes(
                           row.original.state?.net_out_transfer || 0,
                         )
-                      }}</span>
+                      }}</span
+                    >
                   </div>
                   <div class="flex gap-1">
                     <span>负载:</span>
                     <span>{{
                       (row.original.state?.load_1 || 0).toFixed(2)
-                      }}</span>
+                    }}</span>
                     <span>/</span>
                     <span>{{
                       (row.original.state?.load_5 || 0).toFixed(2)
-                      }}</span>
+                    }}</span>
                     <span>/</span>
                     <span>{{
                       (row.original.state?.load_15 || 0).toFixed(2)
-                      }}</span>
+                    }}</span>
                   </div>
                   <div class="flex gap-1">
                     <span>进程数:</span>
@@ -146,9 +176,13 @@
                   </div>
                   <div class="flex gap-1">
                     <span>连接数:</span>
-                    <span>TCP {{ row.original.state?.tcp_conn_count || 0 }}</span>
+                    <span
+                      >TCP {{ row.original.state?.tcp_conn_count || 0 }}</span
+                    >
                     <span>/</span>
-                    <span>UDP {{ row.original.state?.udp_conn_count || 0 }}</span>
+                    <span
+                      >UDP {{ row.original.state?.udp_conn_count || 0 }}</span
+                    >
                   </div>
                   <div class="flex gap-1">
                     <span>启动:</span>
@@ -162,14 +196,17 @@
                     <span>活动:</span>
                     <span>{{
                       new Date(row.original.last_active || 0).toLocaleString()
-                      }}</span>
+                    }}</span>
                   </div>
-                  <div v-if="
-                    row.original.state?.temperatures &&
-                    nezhaUtils.getTemperature(
-                      row.original.state.temperatures,
-                    ) > 0
-                  " class="flex gap-1">
+                  <div
+                    v-if="
+                      row.original.state?.temperatures &&
+                      nezhaUtils.getTemperature(
+                        row.original.state.temperatures,
+                      ) > 0
+                    "
+                    class="flex gap-1"
+                  >
                     <span>温度:</span>
                     <span v-if="!sensorExpanded" class="flex-1">
                       {{
@@ -177,22 +214,28 @@
                           .getTemperature(row.original.state.temperatures)
                           .toFixed(2)
                       }}°C
-                      <i class="bi bi-chevron-double-down cursor-pointer" @click="() => {
-                        sensorExpanded
-                          = !sensorExpanded;
-                      }
-                        "></i>
+                      <i
+                        class="bi bi-chevron-double-down cursor-pointer"
+                        @click="
+                          () => {
+                            sensorExpanded = !sensorExpanded;
+                          }
+                        "
+                      ></i>
                     </span>
                     <span v-else class="flex-1">
                       <span v-for="temp in row.original.state.temperatures">
                         [ {{ temp.Name }} : {{ temp.Temperature.toFixed(2) }}°C
                         ]
                       </span>
-                      <i class="bi bi-chevron-double-up cursor-pointer" @click="() => {
-                        sensorExpanded
-                          = !sensorExpanded;
-                      }
-                        "></i>
+                      <i
+                        class="bi bi-chevron-double-up cursor-pointer"
+                        @click="
+                          () => {
+                            sensorExpanded = !sensorExpanded;
+                          }
+                        "
+                      ></i>
                     </span>
                   </div>
                   <div v-if="row.original.host?.version" class="flex gap-1">
@@ -236,7 +279,9 @@ const columns: ColumnDef<StreamServer>[] = [
     header: "状态",
     cell: ({ row }) => {
       return h(StatusIcon, {
-        state: nezhaUtils.isOffline(row.original.last_active) ? State.Error : State.Success,
+        state: nezhaUtils.isOffline(row.original.last_active)
+          ? State.Error
+          : State.Success,
       });
     },
     maxSize: 20,
@@ -262,15 +307,15 @@ const columns: ColumnDef<StreamServer>[] = [
       const s = row.original;
       return s.state?.uptime || 0 > 0
         ? h("div", { class: "flex gap-1 items-center justify-center" }, [
-          (s.host?.platform || "").toLowerCase() !== "windows"
-            ? h(DistroIcon, { os: s.host?.platform })
-            : h("img", { src: WindowsIcon, class: "w-[14px]" }),
-          h(
-            "span",
-            { class: "capitalize" },
-            nezhaUtils.getPlatformName(s.host?.platform || "Linux"),
-          ),
-        ])
+            (s.host?.platform || "").toLowerCase() !== "windows"
+              ? h(DistroIcon, { os: s.host?.platform })
+              : h("img", { src: WindowsIcon, class: "w-[14px]" }),
+            h(
+              "span",
+              { class: "capitalize" },
+              nezhaUtils.getPlatformName(s.host?.platform || "Linux"),
+            ),
+          ])
         : "";
     },
     minSize: 40,
@@ -285,9 +330,9 @@ const columns: ColumnDef<StreamServer>[] = [
       const s = row.original;
       return s.state?.uptime || 0 > 0
         ? h("div", { class: "flex gap-1 items-center justify-center" }, [
-          h("i", { class: `fi fi-${s.country_code || "un"}` }),
-          h("span", { class: "uppercase" }, s.country_code || "UN"),
-        ])
+            h("i", { class: `fi fi-${s.country_code || "un"}` }),
+            h("span", { class: "uppercase" }, s.country_code || "UN"),
+          ])
         : "";
     },
     minSize: 40,
@@ -341,8 +386,9 @@ const columns: ColumnDef<StreamServer>[] = [
       const progress = s.state?.cpu || 0;
       return h(Progress, {
         progress,
-        state: nezhaUtils.isOffline(row.original.last_active) ? 3 :
-          nezhaUtils.serverState(progress),
+        state: nezhaUtils.isOffline(row.original.last_active)
+          ? 3
+          : nezhaUtils.serverState(progress),
       });
     },
   },
@@ -359,8 +405,9 @@ const columns: ColumnDef<StreamServer>[] = [
       );
       return h(Progress, {
         progress,
-        state: nezhaUtils.isOffline(row.original.last_active) ? 3 :
-          nezhaUtils.serverState(progress),
+        state: nezhaUtils.isOffline(row.original.last_active)
+          ? 3
+          : nezhaUtils.serverState(progress),
       });
     },
   },
@@ -377,8 +424,9 @@ const columns: ColumnDef<StreamServer>[] = [
       );
       return h(Progress, {
         progress,
-        state: nezhaUtils.isOffline(row.original.last_active) ? 3 :
-          nezhaUtils.serverState(progress),
+        state: nezhaUtils.isOffline(row.original.last_active)
+          ? 3
+          : nezhaUtils.serverState(progress),
       });
     },
   },
@@ -395,5 +443,4 @@ const table = useVueTable({
   },
   getExpandedRowModel: getExpandedRowModel(),
 });
-
 </script>

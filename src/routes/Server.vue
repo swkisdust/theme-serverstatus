@@ -1,6 +1,13 @@
 <template>
-  <div v-for="gs in groupedServers" class="flex mt-6 mx-6 items-center mb-2 justify-center">
-    <ServerTable :data="gs.data" :group="gs.group" class="p-[20px] border-[1px] rounded-[3px] w-full">
+  <div
+    v-for="gs in groupedServers"
+    class="flex mt-6 mx-6 items-center mb-2 justify-center"
+  >
+    <ServerTable
+      :data="gs.data"
+      :group="gs.group"
+      class="p-[20px] border-[1px] rounded-[3px] w-full"
+    >
     </ServerTable>
   </div>
 </template>
@@ -49,7 +56,7 @@ const groupedServers = computed(() => {
 const wsRef = ref<WebSocket | null>(null);
 const isConnecting = ref<boolean>(false);
 const reconnectTimeout = ref<number | undefined>(undefined);
-const maxReconnectAttempts = 30
+const maxReconnectAttempts = 30;
 let reconnectAttempts = 0;
 
 // https://github.com/hamster1963/nezha-dash-v1/blob/main/src/context/websocket-provider.tsx
@@ -72,7 +79,7 @@ const connect = () => {
       reconnectTimeout.value = setTimeout(() => {
         reconnectAttempts++;
         connect();
-      }, 3000)
+      }, 3000);
     }
   };
   wsRef.value.onerror = (e) => {
@@ -85,7 +92,7 @@ const connect = () => {
       servers.value = s.servers;
     }
   };
-}
+};
 
 onMounted(connect);
 onUnmounted(() => {
@@ -95,7 +102,10 @@ onUnmounted(() => {
     wsRef.value.onerror = null;
     wsRef.value.onmessage = null;
 
-    if (wsRef.value.readyState === WebSocket.OPEN || wsRef.value.readyState === WebSocket.CONNECTING)
+    if (
+      wsRef.value.readyState === WebSocket.OPEN ||
+      wsRef.value.readyState === WebSocket.CONNECTING
+    )
       wsRef.value.close();
 
     wsRef.value = null;
@@ -107,5 +117,5 @@ onUnmounted(() => {
   }
 
   isConnecting.value = false;
-})
+});
 </script>

@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-const props = defineProps<{ progress?: number; state?: number; }>();
+const props = defineProps<{ progress?: number; state?: number }>();
 const pState = computed(() => {
   switch (props.state) {
     case 0: {
@@ -31,7 +31,7 @@ const pState = computed(() => {
       return "offline";
     }
   }
-})
+});
 </script>
 
 <style scoped>
@@ -77,7 +77,7 @@ const pState = computed(() => {
 }
 
 /* Percent Complete */
-.ui.progress .bar>.progress {
+.ui.progress .bar > .progress {
   white-space: nowrap;
   position: absolute;
   width: auto;
@@ -103,8 +103,10 @@ const pState = computed(() => {
 }
 
 .ui.progress.warning .bar {
-  background-image: linear-gradient(rgb(240, 173, 78) 0,
-      rgb(236, 151, 31) 100%);
+  background-image: linear-gradient(
+    rgb(240, 173, 78) 0,
+    rgb(236, 151, 31) 100%
+  );
 }
 
 .ui.progress.warning .bar,
@@ -124,7 +126,9 @@ const pState = computed(() => {
 }
 
 .ui.progress.offline .bar {
-  background-image: linear-gradient(rgb(128, 128, 128) 0,
-      rgb(128, 128, 128) 100%);
+  background-image: linear-gradient(
+    rgb(128, 128, 128) 0,
+    rgb(128, 128, 128) 100%
+  );
 }
 </style>
