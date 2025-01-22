@@ -65,3 +65,30 @@ export interface ModelServerGroup {
   name: string;
   updated_at: string;
 }
+
+export interface ModelServiceResponse {
+  cycle_transfer_stats?: Record<string, ModelCycleTransferStats>;
+  services?: Record<string, ModelServiceResponseItem>;
+}
+
+export interface ModelServiceResponseItem {
+  current_down: number;
+  current_up: number;
+  delay: number[];
+  down: number[];
+  service_name: string;
+  total_down: number;
+  total_up: number;
+  up: number[];
+}
+
+export interface ModelCycleTransferStats {
+  from: string;
+  max: number;
+  min: number;
+  name: string;
+  next_update: Record<string, string>;
+  server_name: Record<string, string>;
+  to: string;
+  transfer?: Record<string, number>;
+}

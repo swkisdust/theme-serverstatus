@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <Menu></Menu>
-  </div>
-  <router-view></router-view>
+  <Menu></Menu>
+  <section>
+    <router-view></router-view>
+  </section>
   <footer class="text-xs text-center">
     <p>Nezha | Theme ServerStatus-v1 | Powered by Nezha Monitoring</p>
   </footer>

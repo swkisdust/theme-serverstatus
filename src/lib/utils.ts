@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { type ClassValue, clsx } from "clsx";
-import type { SensorTemperature } from "@/components/types";
+import { type SensorTemperature, State } from "@/components/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -23,7 +23,7 @@ export const nezhaUtils = {
   },
   formatUsage: (used: number, total: number) => {
     const result = (used / total) * 100;
-    return isNaN(result) ? "0.00" : result.toFixed(2);
+    return isNaN(result) ? 0 : result;
   },
   toDay: (sec: number) => {
     const secondsInADay = 24 * 60 * 60;
@@ -33,14 +33,14 @@ export const nezhaUtils = {
   getTemperature: (temperatureList: SensorTemperature[]) => {
     // 将 sensorList 中的所有项转换为小写
     const lowerCaseSensorList = sensorList.map((sensor) =>
-      sensor.toLowerCase(),
+      sensor.toLowerCase()
     );
 
     // 合并过滤逻辑：过滤出 Temperature 不为 0 且 Name 在 sensorList 中的元素（忽略大小写）
     const filtered = temperatureList.filter(
       (item) =>
         item.Temperature !== 0 &&
-        lowerCaseSensorList.includes(item.Name.toLowerCase()),
+        lowerCaseSensorList.includes(item.Name.toLowerCase())
     );
 
     // 如果有匹配的元素，则计算这些元素的 Temperature 的最大值
@@ -52,7 +52,7 @@ export const nezhaUtils = {
 
     // 如果没有匹配的元素，则计算 temperatureList 中所有 Temperature 不为 0 的元素的最大值
     const nonZeroTemps = temperatureList.filter(
-      (item) => item.Temperature !== 0,
+      (item) => item.Temperature !== 0
     );
 
     if (nonZeroTemps.length > 0) {
@@ -68,6 +68,68 @@ export const nezhaUtils = {
       return "openSUSE";
     }
     return str;
+  },
+  beforeDay(days: number) {
+    const today = new Date();
+    today.setDate(today.getDate() - days);
+    // 获取月份和日期并格式化
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
+    return `${month}-${day}`;
+  },
+  getPercent(currentUp: number, currentDown: number) {
+    const total = currentUp + currentDown;
+    if (total === 0) {
+      if (currentUp > 0) {
+        return 100;
+      }
+      return 0;
+    } else if (currentUp === 0) {
+      return (0.00001 / total) * 100;
+    }
+    return (currentUp / total) * 100;
+  },
+  timeUntil(futureDate: string) {
+    const now = new Date();
+    const future = new Date(futureDate);
+    const diffMs = future.getTime() - now.getTime();
+
+    if (diffMs <= 0) {
+      return "0m0s";
+    }
+
+    const diffSeconds = Math.round(diffMs / 1000);
+    const minutes = Math.floor(diffSeconds / 60);
+    const seconds = diffSeconds % 60;
+
+    return `${minutes}m${seconds}s`;
+  },
+  serverState(usage: number): State {
+    if (usage < 85) {
+      return State.Success;
+    }
+    if (usage >= 85 && usage < 90) {
+      return State.Warning;
+    }
+    return State.Error;
+  },
+  serviceState(usage: number): State {
+    if (usage < 80) {
+      return State.Error;
+    }
+    if (usage >= 80 && usage < 95) {
+      return State.Warning;
+    }
+    return State.Success;
+  },
+  transferState(usage: number): State {
+    if (usage < 20) {
+      return State.Error;
+    }
+    if (usage >= 20 && usage < 60) {
+      return State.Warning;
+    }
+    return State.Success;
   },
 };
 

@@ -1,10 +1,10 @@
 <template>
   <div>
     <div :class="`ui progress ${pState}`">
-      <div class="bar" :style="{ width: progress + '%' }">
+      <div class="bar" :style="{ width: (progress || 0).toFixed(2) + '%' }">
         <div class="progress">
           <div>
-            <small>{{ progress ? progress : 0 }}%</small>
+            <small>{{ (progress || 0).toFixed(2) }}%</small>
           </div>
         </div>
       </div>
@@ -15,18 +15,23 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-const props = defineProps<{ progress?: string; online?: boolean }>();
+const props = defineProps<{ progress?: number; state?: number; }>();
 const pState = computed(() => {
-  if (!props.online) return "offline";
-
-  const p = Number(props.progress);
-  if (p >= 80 && p <= 90) {
-    return "warning";
-  } else if (p > 90) {
-    return "error";
+  switch (props.state) {
+    case 0: {
+      return "error";
+    }
+    case 1: {
+      return "success";
+    }
+    case 2: {
+      return "warning";
+    }
+    default: {
+      return "offline";
+    }
   }
-  return "success";
-});
+})
 </script>
 
 <style scoped>
@@ -72,7 +77,7 @@ const pState = computed(() => {
 }
 
 /* Percent Complete */
-.ui.progress .bar > .progress {
+.ui.progress .bar>.progress {
   white-space: nowrap;
   position: absolute;
   width: auto;
@@ -98,10 +103,8 @@ const pState = computed(() => {
 }
 
 .ui.progress.warning .bar {
-  background-image: linear-gradient(
-    rgb(240, 173, 78) 0,
-    rgb(236, 151, 31) 100%
-  );
+  background-image: linear-gradient(rgb(240, 173, 78) 0,
+      rgb(236, 151, 31) 100%);
 }
 
 .ui.progress.warning .bar,
@@ -121,9 +124,7 @@ const pState = computed(() => {
 }
 
 .ui.progress.offline .bar {
-  background-image: linear-gradient(
-    rgb(128, 128, 128) 0,
-    rgb(128, 128, 128) 100%
-  );
+  background-image: linear-gradient(rgb(128, 128, 128) 0,
+      rgb(128, 128, 128) 100%);
 }
 </style>

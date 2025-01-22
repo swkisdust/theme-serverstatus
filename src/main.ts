@@ -2,15 +2,20 @@ import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
 import Server from "./routes/Server.vue";
+import Service from "./routes/Service.vue";
 import NotFound from "./routes/NotFound.vue";
-import { createMemoryHistory, createRouter } from "vue-router";
+import { createWebHistory, createRouter } from "vue-router";
 
 const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHistory(),
   routes: [
     {
       path: "/",
       component: Server,
+    },
+    {
+      path: "/service",
+      component: Service,
     },
     {
       path: "/:pathMatch(.*)*",
@@ -20,4 +25,7 @@ const router = createRouter({
   ],
 });
 
-createApp(App).use(router).mount("#app");
+const app = createApp(App);
+
+app.use(router);
+app.mount("#app");
