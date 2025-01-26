@@ -5,6 +5,7 @@ import Server from "./routes/Server.vue";
 import Service from "./routes/Service.vue";
 import NotFound from "./routes/NotFound.vue";
 import { createWebHistory, createRouter } from "vue-router";
+import Network from "./routes/Network.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -21,6 +22,10 @@ const router = createRouter({
       component: Service,
     },
     {
+      path: "/network",
+      component: Network,
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "NotFound",
       component: NotFound,
@@ -31,4 +36,5 @@ const router = createRouter({
 const app = createApp(App);
 
 app.use(router);
+
 app.mount("#app");

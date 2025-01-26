@@ -1,19 +1,12 @@
 <template>
-  <div
-    v-for="gs in groupedServers"
-    class="flex mt-6 mx-6 items-center mb-2 justify-center"
-  >
-    <ServerTable
-      :data="gs.data"
-      :group="gs.group"
-      class="p-[20px] border-[1px] rounded-[3px] w-full"
-    >
+  <div v-for="gs in groupedServers" class="flex mt-6 mx-6 items-center mb-2 justify-center">
+    <ServerTable :data="gs.data" :group="gs.group" class="p-[20px] border-[1px] rounded-[3px] w-full">
     </ServerTable>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, type Ref, onUnmounted } from "vue";
+import { computed, ref, onMounted, type Ref, onUnmounted, provide } from "vue";
 import useSWRV from "swrv";
 import { swrFetcher } from "@/lib/fetch";
 import ServerTable from "@/components/ServerTable.vue";
@@ -24,6 +17,7 @@ import type {
 } from "@/components/types";
 
 const servers: Ref<StreamServer[]> = ref([]);
+provide("streamServers", servers);
 const { data } = useSWRV<ModelServerGroupResponseItem[]>(
   "/api/v1/server-group",
   swrFetcher,

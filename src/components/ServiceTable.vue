@@ -144,16 +144,14 @@ const columns: ColumnDef<ModelServiceResponseItem>[] = [
       );
 
       const avgDelay = count > 0 ? sum / count : 0;
-      return `${avgDelay.toFixed(3)}ms`;
+      return `${Math.round(avgDelay)}ms`;
     },
-    minSize: 80,
-    maxSize: 80,
+    minSize: 100,
   },
   {
     id: "availability",
     header: "近30天可用性",
-    minSize: 80,
-    maxSize: 80,
+    minSize: 100,
     cell: ({ row }) => {
       const s = row.original;
       const progress = nezhaUtils.getPercent(s.total_up, s.total_down);
